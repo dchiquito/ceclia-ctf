@@ -1,0 +1,37 @@
+<html>
+<head>
+<title>
+&lt;3
+</title>
+<link rel="stylesheet" href="/static/style.css">
+<link rel="stylesheet" href="/static/login.css">
+</head>
+
+<body>
+<div class="section header">
+    <div class="header__title">
+        Greetings, intruder
+    </div>
+    <div class="header__blurb">
+        Perhaps you should log in so that Daniel knows you can be trusted
+    </div>
+</div>
+<div class="section login">
+    <div class="login-field login__username">
+        <div class="login-field__prompt">Name:</div>
+        <input class="login-field__input" id="name" type="text" v-model="username"></input>
+    </div>
+    <div class="login-field login__password">
+        <div class="login-field__prompt">Password:</div>
+        <input class="login-field__input" id="password" type="password" v-model="password"></input>
+    </div>
+    <div class="login-button login__submit">
+        <input class="login-button__input" id="submit" type="button" v-on:click="submit" value="Log In"></input>
+    </div>
+</div>
+</body>
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/vue-cookies@1.5.12/vue-cookies.js"></script>
+<script src="/app/js/login.js"></script>
+</html>

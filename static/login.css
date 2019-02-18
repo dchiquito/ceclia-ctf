@@ -1,0 +1,25 @@
+
+.login-field {
+    margin: auto;
+    width: 300px;
+}
+
+.login-field__prompt {
+    text-align: center;
+}
+
+.login-field__input {
+    width: 100%;
+}
+
+.login-button {
+    margin: auto;
+    width: 300px;
+}
+
+.login-button__input {
+    width: 100%;
+    font-family: Courier New, sans-serif;
+}
+
+

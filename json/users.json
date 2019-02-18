@@ -1,0 +1,17 @@
+
+[
+    {
+        "username":     "ceclia",
+        "password": "topkek",
+        "admin":    false,
+        "progress": null
+    },
+    {
+        "username":     "daniel",
+        "password": "password",
+        "admin":    true,
+        "progress": null
+    }
+]
+
+

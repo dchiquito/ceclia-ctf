@@ -1,0 +1,12 @@
+
+[
+    {
+        "name":     "thefirst",
+        "flag":     "CTF{1_l0v3_u_:3}",
+        "hint":     "Really? It was the first flag, not sure how you'd miss it",
+        "solved":   false,
+        "hintused": false
+    }
+]
+
+

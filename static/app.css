@@ -1,0 +1,35 @@
+
+.nav {
+    display: flex;
+}
+
+.nav__option {
+    flex-grow: 1;
+    text-align: center;
+    font-size: 24px;
+}
+
+.nav__option_selected {
+    background: #3496b5;
+}
+
+.nav a:link {
+  text-decoration: none;
+  color: black;
+}
+
+.nav a:visited {
+  text-decoration: none;
+  color: black;
+}
+
+.nav a:hover {
+  text-decoration: none;
+  color: black;
+}
+
+.nav a:active {
+  text-decoration: none;
+  color: black;
+}
+

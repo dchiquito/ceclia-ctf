@@ -1,0 +1,90 @@
+<html>
+<head>
+<title>
+&lt;3
+</title>
+<link rel="stylesheet" href="/static/style.css">
+<link rel="stylesheet" href="/static/app.css">
+</head>
+
+<body>
+<div class="app">
+<div class="section header">
+    <div class="header__title">
+        Welcome, [[.Username]]!
+    </div>
+    <div class="header__blurb">
+        Now that you've logged in successfully and legitimately, you should submit the flags you've found so far!
+    </div>
+</div>
+
+<div class="section nav">
+    <div class="nav__option nav__progress[[if eq .Page "progress"]] nav__option_selected[[end]]">
+        <a href="/app?page=progress">Progress!</a>
+    </div>
+    <div class="nav__option nav__leaderboard[[if eq .Page "leaderboard"]] nav__option_selected[[end]]">
+        <a href="/app?page=leaderboard">Leaderboard!</a>
+    </div>
+    [[if .Admin]]
+    <div class="nav__option nav__admin[[if eq .Page "admin"]] nav__option_selected[[end]]">
+        <a href="/app?page=admin">Admin!</a>
+    </div>
+    [[end]]
+    <div class="nav__option nav__account[[if eq .Page "account"]] nav__option_selected[[end]]">
+        <a href="/app?page=account">Account!</a>
+    </div>
+</div>
+
+[[if eq .Page "progress"]]
+<div class="section progress">
+    [[.Progress]]
+    [[range $index, $challenge := .Progress]]
+        <div>
+            <div>[[$index]]</div>
+            [[if not $challenge.HintUsed]]
+                <div>???</div>
+            [[else]]
+                <div>[[$challenge.Name]]</div>
+                <div>[[$challenge.Hint]]</div>
+            [[end]]
+            [[if $challenge.Solved]]
+                <div>Solved!</div>
+            [[end]]
+        </div>
+    [[end]]
+</div>
+[[else if eq .Page "leaderboard"]]
+<div class="section leaderboard">
+    <table>
+        <tbody>
+            [[range $username, $percent := .Leaderboard]]
+                <tr>
+                    <td>[[$username]]</td>
+                    <td>[[$percent]]</td>
+                </tr>
+            [[end]]
+        </tbody>
+    </table>
+</div>
+[[else if eq .Page "admin"]]
+<div class="section admin">
+    admin
+</div>
+[[else if eq .Page "account"]]
+<div class="section account">
+    <a href="/login" v-on:click="signout">Sign Out</a>
+</div>
+[[else]]
+<div class="section error">
+    Wow, [[.Page]]? Think you're fancy, huh? Maybe you should look closer at all those pages I worked so hard on &gt;:(<br>
+    CTF{pl34z3_R3tuRn_t0_th3-f13ld_0f_pl4y}
+</div>
+[[end]]
+</div>
+</body>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/vue-cookies@1.5.12/vue-cookies.js"></script>
+<script src="/app/js/app.js"></script>
+</html>
