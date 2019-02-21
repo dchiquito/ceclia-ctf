@@ -1,5 +1,7 @@
 #!/bin/sh
 
+gcc c/passwordRecovery.c -o static/passwordRecovery
+
 # assumes you have already run:
 # go get -u github.com/jteeuwen/go-bindata/...
 

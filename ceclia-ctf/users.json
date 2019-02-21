@@ -1,0 +1,72 @@
+[
+    {
+        "Username": "ceclia",
+        "Password": "topkek",
+        "Admin": false,
+        "Progress": [
+            {
+                "Name": "thefirst",
+                "Flag": "CTF{1_l0v3_u_:3}",
+                "Hint": "Really? It was the first flag, not sure how you'd miss it :/",
+                "Solved": true,
+                "HintUsed": true
+            },
+            {
+                "Name": "The Navigator",
+                "Flag": "CTF{Im_2_l4zy_4_pr0p3r_r0ut1ng}",
+                "Hint": "This site sure has some interesting URL practices",
+                "Solved": false,
+                "HintUsed": true
+            },
+            {
+                "Name": "Strings",
+                "Flag": "CTF{str1ngs_w0nt_s4v3_u}",
+                "Hint": "There are lots of strings in the password recovery tool",
+                "Solved": false,
+                "HintUsed": false
+            },
+            {
+                "Name": "P4ssword Cr4cker",
+                "Flag": "CTF{d4mn_u_sm4rt_gurl}",
+                "Hint": "Haven't you always wanted to be the admin? Well the first step is to recover the admin's password",
+                "Solved": true,
+                "HintUsed": false
+            }
+        ]
+    },
+    {
+        "Username": "daniel",
+        "Password": "password",
+        "Admin": true,
+        "Progress": [
+            {
+                "Name": "thefirst",
+                "Flag": "CTF{1_l0v3_u_:3}",
+                "Hint": "Really? It was the first flag, not sure how you'd miss it :/",
+                "Solved": true,
+                "HintUsed": false
+            },
+            {
+                "Name": "The Navigator",
+                "Flag": "CTF{Im_2_l4zy_4_pr0p3r_r0ut1ng}",
+                "Hint": "This site sure has some interesting URL practices",
+                "Solved": true,
+                "HintUsed": false
+            },
+            {
+                "Name": "Strings",
+                "Flag": "CTF{str1ngs_w0nt_s4v3_u}",
+                "Hint": "There are lots of strings in the password recovery tool",
+                "Solved": true,
+                "HintUsed": false
+            },
+            {
+                "Name": "P4ssword Cr4cker",
+                "Flag": "CTF{d4mn_u_sm4rt_gurl}",
+                "Hint": "Haven't you always wanted to be the admin? Well the first step is to recover the admin's password",
+                "Solved": true,
+                "HintUsed": false
+            }
+        ]
+    }
+]

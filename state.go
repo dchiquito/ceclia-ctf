@@ -2,6 +2,8 @@ package main
 
 import (
     "encoding/json"
+    "errors"
+    "fmt"
     "io/ioutil"
     "os"
 
@@ -31,8 +33,6 @@ var (
 )
 
 func init() {
-    Info.Printf("ehehehehe initd")
-
     rawChallengesTemplate := assets.MustAsset("json/challenges.json")
     rawUsersTemplate := assets.MustAsset("json/users.json")
 
@@ -59,8 +59,13 @@ func init() {
     } else if os.IsNotExist(err) {
         Info.Printf("users.json is missing, creating it\n")
         users = make([]User, len(usersTemplate))
-        copy(users, usersTemplate)
-
+        for i,user := range usersTemplate {
+            // shallow copy, they will still share Progress
+            users[i] = user
+            // deep copy Progress
+            users[i].Progress = make([]Challenge, len(user.Progress))
+            copy(users[i].Progress, user.Progress)
+        }
         SaveUsers()
     }
 }
@@ -131,10 +136,62 @@ func ProgressForUser(username string) []Challenge {
 
 func RequestHint(username string, password string, index int) error {
     Info.Printf("Requesting hint for %v %v %v\n", username, password, index)
+    if !UserIsAuthorized(username, password) {
+        return errors.New(fmt.Sprintf("%v is not authorized to request hints", username))
+    }
+    user := FindUser(username)
+    if user.Progress[index].HintUsed {
+        return errors.New(fmt.Sprintf("Hint already requested for challenge #%v", index))
+    }
+    user.Progress[index].HintUsed = true
+    SaveUsers()
     return nil
 }
 
 func Submit(username string, password string, flag string) error {
     Info.Printf("Attempting submission for %v %v %v\n", username, password, flag)
+    if !UserIsAuthorized(username, password) {
+        Info.Printf("%v is not authorized to submit flags without a valid password", username)
+        return errors.New(fmt.Sprintf("%v is not authorized to submit flags without a valid password", username))
+    }
+    user := FindUser(username)
+    for index, challenge := range user.Progress {
+        if challenge.Flag == flag {
+            if challenge.Solved {
+                Info.Printf("Flag has already been submitted for challenge #%v", index)
+                return errors.New(fmt.Sprintf("Flag has already been submitted for challenge #%v", index))
+            }
+            Info.Printf("Flag %v accepted!", flag)
+            user.Progress[index].Solved = true
+            Info.Printf("challenge.Solved %v\n", challenge.Solved)
+            Info.Printf("user.Progress[index].Solved %v\n", user.Progress[index].Solved)
+            Info.Printf("users[0].Progress[index].Solved %v\n", users[0].Progress[index].Solved)
+            SaveUsers()
+            return nil
+        }
+    }
+    Info.Printf("flag %v was incorrect\n", flag)
+    return errors.New(fmt.Sprintf("Flag %v was incorrect", flag))
+}
+
+func ResetUsers(username string, password string) error {
+    if !UserIsAdmin(username) {
+        Info.Printf("%v is not an admin, not permitted to reset users", username)
+        return errors.New(fmt.Sprintf("%v is not an admin, not permitted to reset users", username))
+    }
+    if !UserIsAuthorized(username, password) {
+        Info.Printf("Wrong password for %v! How dare you hack my site!", username)
+        return errors.New(fmt.Sprintf("Wrong password for %v! How dare you hack my site!", username))
+    }
+    Info.Printf("Resetting users")
+    users = make([]User, len(usersTemplate))
+    for i,user := range usersTemplate {
+        // shallow copy, they will still share Progress
+        users[i] = user
+        // deep copy Progress
+        users[i].Progress = make([]Challenge, len(user.Progress))
+        copy(users[i].Progress, user.Progress)
+    }
+    SaveUsers()
     return nil
 }

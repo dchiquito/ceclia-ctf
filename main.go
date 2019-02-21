@@ -7,6 +7,7 @@ import (
     "log"
     "net/http"
     "os"
+    "strconv"
 
     "github.com/dchiquit/ceclia-ctf-go/assets"
     "github.com/gorilla/mux"
@@ -45,32 +46,7 @@ func render(w http.ResponseWriter, r *http.Request, tpl *template.Template, data
     w.Write(buf.Bytes())
 }
 
-// LoginHandler renders the login.html template
-func LoginHandler(w http.ResponseWriter, r *http.Request) {
-    w.Header().Set("Content-Type", "text/html; charset=utf-8")
-
-    if HasBeenAuthorized(r) || Authenticate(w,r) {
-        http.Redirect(w, r, "/app?page=progress", 302)
-        return
-    }
-
-    render(w, r, loginTpl, nil)
-}
-
-// AppHandler renders the app.html template
-func AppHandler(w http.ResponseWriter, r *http.Request) {
-    w.Header().Set("Content-Type", "text/html; charset=utf-8")
-
-    if !HasBeenAuthorized(r) {
-        http.Redirect(w, r, "/login", 302)
-        return
-    }
-    values := r.URL.Query()["page"]
-    Info.Printf("All them values! %v %v\n", values, len(values))
-    page := "progress"
-    if len(values) > 0 {
-        page = values[0]
-    }
+func renderAppPage(w http.ResponseWriter, r *http.Request, page string, message string) {
     username := GetUsernameFromCookie(r)
     admin := UserIsAdmin(username)
     progress := ProgressForUser(username)
@@ -86,7 +62,6 @@ func AppHandler(w http.ResponseWriter, r *http.Request) {
         }
         percent := 100 * float64(solved) / float64(len(userProgress))
         leaderboard[username] = fmt.Sprintf("%.1f%%", percent)
-        Info.Printf("HEEEEEY %v %v %v\n", leaderboard[username], solved, percent)
     }
     fullData := map[string]interface{}{
         "Username":    GetUsernameFromCookie(r),
@@ -94,40 +69,89 @@ func AppHandler(w http.ResponseWriter, r *http.Request) {
         "Page":        page,
         "Progress":    progress,
         "Leaderboard": leaderboard,
+        "Message":     message,
     }
     render(w, r, appTpl, fullData)
 }
 
+// LoginHandler renders the login.html template
+func LoginHandler(w http.ResponseWriter, r *http.Request) {
+    w.Header().Set("Content-Type", "text/html; charset=utf-8")
+
+    if HasBeenAuthorized(r) || Authenticate(w,r) {
+        http.Redirect(w, r, "/app", 302)
+        return
+    }
+
+    render(w, r, loginTpl, nil)
+}
+
+// AppHandler renders the app.html template
+func AppHandler(w http.ResponseWriter, r *http.Request) {
+    w.Header().Set("Content-Type", "text/html; charset=utf-8")
+
+    pageValues := r.URL.Query()["page"]
+    page := "progress"
+    if len(pageValues) > 0 {
+        page = pageValues[0]
+    }
+    if !HasBeenAuthorized(r) {
+        http.Redirect(w, r, "/login", 302)
+        return
+    }
+    renderAppPage(w, r, page, "")
+}
+
 func HintHandler(w http.ResponseWriter, r *http.Request) {
-    values := r.URL.Query()["index"]
-    if len(values) == 0 {
+    w.Header().Set("Content-Type", "text/html; charset=utf-8")
+
+    indexValues := r.URL.Query()["index"]
+    if len(indexValues) == 0 {
         Info.Printf("No index specified\n")
-        r.WriteHeader(400)
+        renderAppPage(w, r, "progress", "No index specified!")
+        return
     }
-    index, err := strconv.ParseInt(values[0])
+    index, err := strconv.Atoi(indexValues[0])
     if err != nil {
-        Info.Printf("Incorrectly formatted index %v\n", values[0])
-        r.WriteHeader(400)
+        Info.Printf("Incorrectly formatted index %v\n", indexValues[0])
+        renderAppPage(w, r, "progress", "Incorrectly formatted index!")
+        return
     }
-    err := RequestHint(GetUsernameFromCookie(), GetPasswordFromCookie(), index)
+    err = RequestHint(GetUsernameFromCookie(r), GetPasswordFromCookie(r), index)
     if err != nil {
-        r.WriteHeader(400)
+        renderAppPage(w, r, "progress", err.Error())
+        return
     }
-    r.WriteHeader(200)
+    renderAppPage(w, r, "progress", "Fine. Here ya go")
 }
 
 func SubmitHandler(w http.ResponseWriter, r *http.Request) {
-    values := r.URL.Query()["flag"]
-    if len(values) == 0 {
+    w.Header().Set("Content-Type", "text/html; charset=utf-8")
+
+    flagValues := r.URL.Query()["flag"]
+    if len(flagValues) == 0 {
         Info.Printf("No flag specified\n")
-        r.WriteHeader(400)
+        renderAppPage(w, r, "progress", "No flag specified")
+        return
     }
-    flag := values[0]
-    err := Submit(GetUsernameFromCookie(), GetPasswordFromCookie(), flag)
+    flag := flagValues[0]
+    err := Submit(GetUsernameFromCookie(r), GetPasswordFromCookie(r), flag)
     if err != nil {
-        r.WriteHeader(400)
+        renderAppPage(w, r, "progress", err.Error())
+        return
     }
-    r.WriteHeader(200)
+    renderAppPage(w, r, "progress", "You got it!")
+}
+
+func ResetHandler(w http.ResponseWriter, r *http.Request) {
+    w.Header().Set("Content-Type", "text/html; charset=utf-8")
+
+    err := ResetUsers(GetUsernameFromCookie(r), GetPasswordFromCookie(r))
+    if err != nil {
+        renderAppPage(w, r, "admin", err.Error())
+        return
+    }
+    renderAppPage(w, r, "admin", "All user progress reset")
 }
 
 func RobotsHandler(w http.ResponseWriter, r *http.Request) {
@@ -138,8 +162,9 @@ func main() {
     router := mux.NewRouter()
     router.HandleFunc("/login", LoginHandler).Methods("GET")
     router.HandleFunc("/app", AppHandler).Methods("GET")
-    router.HandleFunc("/app/hint", HintHandler).Methods("POST")
-    router.HAndleFunc("/app/submit", SubmitHandler).Methods("POST")
+    router.HandleFunc("/app/hint", HintHandler).Methods("GET")
+    router.HandleFunc("/app/submit", SubmitHandler).Methods("GET")
+    router.HandleFunc("/app/reset", ResetHandler).Methods("GET")
     router.HandleFunc("/robots.txt", RobotsHandler).Methods("GET")
     router.PathPrefix("/app/js/").Handler(http.StripPrefix("/app/js/", http.FileServer(http.Dir("./js"))))
     router.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("./static"))))

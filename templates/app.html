@@ -35,21 +35,42 @@
     </div>
 </div>
 
+[[if .Message]]
+<div class="section message">
+    [[.Message]]
+</div>
+[[end]]
+
 [[if eq .Page "progress"]]
 <div class="section progress">
+    <div>
+        <input type="text" v-model="flag"></input>
+        <input type="submit" value="Submit Flag" v-on:click="submit()"></input>
+    </div>
     [[.Progress]]
     [[range $index, $challenge := .Progress]]
-        <div>
-            <div>[[$index]]</div>
-            [[if not $challenge.HintUsed]]
-                <div>???</div>
-            [[else]]
-                <div>[[$challenge.Name]]</div>
-                <div>[[$challenge.Hint]]</div>
-            [[end]]
-            [[if $challenge.Solved]]
-                <div>Solved!</div>
-            [[end]]
+        <div class="challenge-section">
+            <div class="challenge-header">
+                <div class="challenge-header__index">[[$index]]</div>
+                <div class="challenge-header__name">
+                    [[if or $challenge.HintUsed $challenge.Solved]]
+                        [[$challenge.Name]]
+                    [[else]]
+                        ???
+                    [[end]]
+                </div>
+            </div>
+            <div class="challenge-body">
+                [[if $challenge.Solved]]
+                    Solved!<br>
+                    Flag: [[$challenge.Flag]]<br>
+                    Hint: [[$challenge.Hint]]
+                [[else if $challenge.HintUsed]]
+                    Hint: [[$challenge.Hint]]
+                [[else]]
+                    <input type="submit" value="Get Hint" v-on:click="hint([[$index]])"></input>
+                [[end]]
+            </div>
         </div>
     [[end]]
 </div>
@@ -68,7 +89,8 @@
 </div>
 [[else if eq .Page "admin"]]
 <div class="section admin">
-    admin
+    <input type="submit" value="Reset All Progress" v-on:click="reset()"></input>
+    <a href="/static/passwordRecovery">Password Recovery Tool</a>
 </div>
 [[else if eq .Page "account"]]
 <div class="section account">
@@ -76,8 +98,9 @@
 </div>
 [[else]]
 <div class="section error">
-    Wow, [[.Page]]? Think you're fancy, huh? Maybe you should look closer at all those pages I worked so hard on &gt;:(<br>
-    CTF{pl34z3_R3tuRn_t0_th3-f13ld_0f_pl4y}
+    Nice try, but I'm to smart to be fooled by [[.Page]] &gt;:(<br>
+    You can have this flag tho<br>
+    CTF{Im_2_l4zy_4_pr0p3r_r0ut1ng}
 </div>
 [[end]]
 </div>
