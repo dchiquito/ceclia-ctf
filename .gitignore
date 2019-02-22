@@ -17,10 +17,7 @@
 ## build
 
 # we don't want build contents to be stored
-/build/phase1/*
-/build/phase2/*
-/build/phase3/*
-/build/phase4/*
+/build
 
 ## Phase 1
 

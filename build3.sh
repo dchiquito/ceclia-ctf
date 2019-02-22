@@ -1,5 +1,7 @@
 #!/bin/sh
 
+mkdir -p build/phase3
+
 echo "Building Phase 3: Logging in..."
 
 echo "\tCopying passwordRecovery file from Phase 4..."

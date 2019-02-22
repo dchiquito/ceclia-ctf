@@ -1,5 +1,18 @@
 # ceclia-ctf
 
+## Building the project
+
+Run `./build.sh`. This will run the build scripts for each phase and then compile the contents into `build/ctf.zip`. The .zip file can be distributed to whatever host is necessary to run the CTF (specifically the Raspberry Pi used to host phase 3).
+
+The following can also be run as well to individually build a single phase:
+
+`build1.sh`
+`build2.sh`
+`build3.sh`
+`build4.sh`
+
+Note that lower phases generally have dependencies on higher ones.
+
 ## Phase 1: Playfair cipher
 
 The message is encrypted with the Playfair cipher with no key. The message will include a hint: `STEGANOGRAPHY`
