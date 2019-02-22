@@ -1,4 +1,4 @@
-# ceclia-ctf-go
+# ceclia-ctf
 
 ## Phase 1: Playfair cipher
 

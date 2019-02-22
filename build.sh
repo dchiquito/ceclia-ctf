@@ -1,10 +1,8 @@
 #!/bin/sh
 
-gcc c/passwordRecovery.c -o static/passwordRecovery
+./build4.sh
+./build3.sh
+./build2.sh
+./build1.sh
 
-# assumes you have already run:
-# go get -u github.com/jteeuwen/go-bindata/...
-
-go-bindata -o=assets/bindata.go --nocompress --nometadata --pkg=assets templates/... js/... json/... static/...
-go build
 
