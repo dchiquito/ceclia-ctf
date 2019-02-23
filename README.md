@@ -19,23 +19,29 @@ The message is encrypted with the Playfair cipher with no key. The message will 
 
 The ciphertext is handwritten, then photographed. Phase 2 is concealed in the image file as a .zip file.
 
-The image file is shared over telegram with the following hint: `play fair ;)`
-
-No flags are included at this stage.
-
-## Phase 2: Hastad's Broadcast Attack
-
-A .zip file is included in the image file from Phase 1. The .zip file contains a README describing the CTF. Basically, the primary objective is figuring out how to submit the flags. The secondary objective is to find all the flags and submit them. Instead of marking progress, flags are dead ends.
-
-The .zip file also contains a directory which contains a number of files which contain a number of ciphertexts. The .zip file also contains a Python program used to generate the ciphertexts. RSA is used to encrypt the same message every time. A different private key is used for every file, and the keys are not given. Hastad's Broadcast Attack must be used to obtain the message. 
-
-The .zip file also contains another .zip file which contains a disclaimer and another .zip file which contains [this .pdf](https://crypto.stanford.edu/~dabo/papers/RSA-survey.pdf). This paper describes a number of RSA vulnerabilities, including Hastad's Broadcast Attack.
+The .zip file contains a README describing the CTF. Basically, the primary objective is figuring out how to submit the flags. The secondary objective is to find all the flags and submit them. Instead of marking progress, flags are dead ends.
 
 The .zip file also contains a file `.flag` that contains the flag. Because it starts with `.` it will not show up on a normal `ls`.
 
+The image file is shared over telegram with the following hint: `play fair ;)`
+
+The first flag is included for free in the README.
+
 #### Flags
 
-The first flag is contained in the `.flag` file.
+The second flag is contained in the `.flag` file.
+
+## Phase 2: Hastad's Broadcast Attack
+
+The .zip file from phase1 also contains everything required for Phase 2.
+
+The .zip file contains a Python program `broadcast.py` which encrypts a message using RSA several times with different keys, then writes each ciphertext and public key to it's own file. A different private key is used for every ciphertext, and the private keys are not stored. Hastad's Broadcast Attack must be used to obtain the message.
+
+The .zip file also contains another .zip file which contains a disclaimer and another .zip file which contains [this .pdf](https://crypto.stanford.edu/~dabo/papers/RSA-survey.pdf). This paper describes a number of RSA vulnerabilities, including Hastad's Broadcast Attack. The solution is to use the Chinese Remainder Theorem on the ciphertexts to determine M^e (mod N*N*N*...*N*N*N), then simply take the e^th root of M^e to determine the original M. `solution.py` is included in the phase2 directory.
+
+#### Flags
+
+There are no flags in this phase.
 
 ## Phase 3: Logging in
 
@@ -65,11 +71,11 @@ Subpages are accessed via URL parameters: `/app?page={page}` Each page also has 
 
 #### Flags
 
-The second flag can be found by checking robots.txt on the app.
+The third flag can be found by checking robots.txt on the app.
 
-The third flag can be found by inspecting the JS of the login page.
+The fourth flag can be found by inspecting the JS of the login page.
 
-The fourth flag can be found by specifying an undefined page value in the URL. 
+The fifth flag can be found by specifying an undefined page value in the URL. 
 
 ## Phase 4: Reversing
 
@@ -81,9 +87,9 @@ Inside the tool are two mashed up passwords, the admin password and ceclia's pas
 
 #### Flags
 
-The fifth flag can be found by running `strings` on the passwordRecovery tool.
+The sixth flag can be found by running `strings` on the passwordRecovery tool.
 
-The sixth flag is the admin password. It can be found by calling `mash_it_up` on the mashed up admin password.
+The seventh flag is the admin password. It can be found by calling `mash_it_up` on the mashed up admin password.
 
 ## Phase 5: Submitting Flags
 

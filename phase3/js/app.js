@@ -1,4 +1,6 @@
 
+// CTF{R34d1ng_src_c0d3_1s_my_f4v0rit3_h0bby}
+
 app = new Vue({
     el: '.app',
     data: {

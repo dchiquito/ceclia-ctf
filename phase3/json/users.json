@@ -1,14 +1,14 @@
 
 [
     {
-        "username":     "ceclia",
-        "password": "topkek",
+        "username": "ceclia",
+        "password": "DanielIsTheCoolest",
         "admin":    false,
         "progress": null
     },
     {
-        "username":     "daniel",
-        "password": "password",
+        "username": "d4ni3l",
+        "password": "TopSecret",
         "admin":    true,
         "progress": null
     }
