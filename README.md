@@ -13,15 +13,17 @@ The following can also be run as well to individually build a single phase:
 
 Note that lower phases generally have dependencies on higher ones.
 
-## Phase 1: Playfair cipher
+## Phase 1: Playfair cipher & Steganography
 
 The message is encrypted with the Playfair cipher with no key. The message will include a hint: `STEGANOGRAPHY`
 
-The ciphertext is handwritten, then photographed. Phase 2 is concealed in the image file. The image file is shared over telegram with the following hint: `play fair ;)`
+The ciphertext is handwritten, then photographed. Phase 2 is concealed in the image file as a .zip file.
+
+The image file is shared over telegram with the following hint: `play fair ;)`
 
 No flags are included at this stage.
 
-## Phase 2: Steganography
+## Phase 2: Hastad's Broadcast Attack
 
 A .zip file is included in the image file from Phase 1. The .zip file contains a README describing the CTF. Basically, the primary objective is figuring out how to submit the flags. The secondary objective is to find all the flags and submit them. Instead of marking progress, flags are dead ends.
 
