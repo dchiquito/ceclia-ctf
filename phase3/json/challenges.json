@@ -31,21 +31,21 @@
     {
         "name":     "The Navigator",
         "flag":     "CTF{b0ldly_g0_wh3r3_n0_h4cker_h4s_g0n3_b4}",
-        "hint":     "Hiding secret pages is just juvenile, frankly.",
+        "hint":     "Going out of bounds is not allowed >:(",
         "solved":   false,
         "hintused": false
     },
     {
         "name":     "Strings",
         "flag":     "CTF{str1ngs_w0nt_s4v3_u}",
-        "hint":     "There are lots of strings in the password recovery tool",
+        "hint":     "strings are things",
         "solved":   false,
         "hintused": false
     },
     {
         "name":     "P4ssword Cr4cker",
         "flag":     "CTF{d4mn_u_sm4rt_gurl}",
-        "hint":     "Haven't you always wanted to be the admin? Well the first step is to recover the admin's password",
+        "hint":     "To beat the admin, you gotta become the admin",
         "solved":   false,
         "hintused": false
     }

@@ -7,7 +7,7 @@ import (
     "io/ioutil"
     "os"
 
-    "github.com/dchiquit/ceclia-ctf-go/assets"
+    "github.com/dchiquit/ceclia-ctf/phase3/assets"
 )
 
 type Challenge struct {
@@ -42,6 +42,9 @@ func init() {
     if err := json.Unmarshal(rawUsersTemplate, &usersTemplate); err != nil {
         panic(err)
     }
+    Info.Printf("Initial values loaded from binary:\n");
+    Info.Printf("Users: %v\n", usersTemplate);
+    Info.Printf("Challenges: %v\n", challengesTemplate);
 
     for i,_ := range usersTemplate {
         usersTemplate[i].Progress = make([]Challenge, len(challengesTemplate))

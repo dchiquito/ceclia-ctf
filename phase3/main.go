@@ -9,7 +9,8 @@ import (
     "os"
     "strconv"
 
-    "github.com/dchiquit/ceclia-ctf-go/assets"
+    "github.com/dchiquit/ceclia-ctf/phase3/assets"
+    "github.com/elazarl/go-bindata-assetfs"
     "github.com/gorilla/mux"
 )
 
@@ -166,8 +167,7 @@ func main() {
     router.HandleFunc("/app/submit", SubmitHandler).Methods("GET")
     router.HandleFunc("/app/reset", ResetHandler).Methods("GET")
     router.HandleFunc("/robots.txt", RobotsHandler).Methods("GET")
-    router.PathPrefix("/app/js/").Handler(http.StripPrefix("/app/js/", http.FileServer(http.Dir("./js"))))
-    router.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("./static"))))
+    router.PathPrefix("/static/").Handler(http.FileServer(&assetfs.AssetFS{Asset: assets.Asset, AssetDir: assets.AssetDir, AssetInfo: assets.AssetInfo, Prefix: ""}))
     Info.Printf("Up and running!\n")
     log.Fatal(http.ListenAndServe(":9596", router))
 }

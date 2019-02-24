@@ -3,8 +3,8 @@
 <title>
 &lt;3
 </title>
-<link rel="stylesheet" href="/static/style.css">
-<link rel="stylesheet" href="/static/app.css">
+<link rel="stylesheet" href="/static/css/style.css">
+<link rel="stylesheet" href="/static/css/app.css">
 </head>
 
 <body>
@@ -47,7 +47,6 @@
         <input type="text" v-model="flag"></input>
         <input type="submit" value="Submit Flag" v-on:click="submit()"></input>
     </div>
-    [[.Progress]]
     [[range $index, $challenge := .Progress]]
         <div class="challenge-section">
             <div class="challenge-header">
@@ -109,5 +108,5 @@
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script src="https://unpkg.com/vue-cookies@1.5.12/vue-cookies.js"></script>
-<script src="/app/js/app.js"></script>
+<script src="/static/js/app.js"></script>
 </html>
