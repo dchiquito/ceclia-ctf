@@ -45,7 +45,7 @@ There are no flags in this phase.
 
 ## Phase 3: Logging in
 
-The message from Phase 2 is a URL (possibly shortened) to a Raspberry pi hosting my CTF server application (app). The app will automatically redirect to the login page without valid credentials or a hacked auth token. The auth token is a base64 encoded JSON object stored in a cookie:
+The message from Phase 2 is a URL (possibly shortened) to a Raspberry pi hosting my CTF server application (app). The app will automatically redirect to the login page without valid credentials or a hacked auth token. The auth token is a JWTF token stored in a cookie, that has the following payload:
 
 ```
 {
@@ -73,7 +73,7 @@ Subpages are accessed via URL parameters: `/app?page={page}` Each page also has 
 
 The third flag can be found by checking robots.txt on the app.
 
-The fourth flag can be found by inspecting the JS of the login page.
+The fourth flag can be found by inspecting the HTML of the login page, finding a commented out link to a JS file, and inspecting it.
 
 The fifth flag can be found by specifying an undefined page value in the URL. 
 

@@ -83,6 +83,9 @@
 </div>
 [[else if eq .Page "leaderboard"]]
 <div class="section leaderboard">
+    [[if eq .Leaderboard.ceclia "100.0%"]]
+        You did it! You won! Go tell Daniel so he can be proud of you :*
+    [[end]]
     <table class="leaderboard-table">
         <tbody>
             [[range $username, $percent := .Leaderboard]]
