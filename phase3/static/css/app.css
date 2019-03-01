@@ -33,3 +33,44 @@
   color: black;
 }
 
+.challenge-section {
+    border: 2px solid #7671dd;
+    border-radius: 10px;
+    background: #cac8f2;
+    margin: 10px;
+    padding: 6px;
+}
+
+.challenge-section_solved { 
+    border: 2px solid #51ee6f;
+    border-radius: 10px;
+    background: #a2f4b2;
+}
+
+.challenge-header__index {
+    display: inline;
+}
+
+.challenge-header__name {
+    display: inline;
+    font-size: 20px;
+}
+
+.challenge-body__flag {
+    font-weight: bold;
+}
+
+.leaderboard-table {
+    border: 1px solid black;
+    width: 100%;
+}
+
+.leaderboard-table__username {
+    font-family: Courier New, serif;
+    font-size: 18px;
+}
+
+.leaderboard-table__percent {
+    font-size: 24px;
+    text-align: right;
+}

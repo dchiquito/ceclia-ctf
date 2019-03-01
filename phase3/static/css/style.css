@@ -3,7 +3,7 @@
 /* CTF{uve_g0t_m0r3_styl3_th4n_th3z3_sh33tz} */
 
 body {
-    background: #08d685;
+    background: #fcfce9;
     font-family: Garuda, Courier New, sans-serif;
 }
 
@@ -13,7 +13,8 @@ body {
    margin-top: 10px;
    margin-bottom: 10px;
    padding: 20px;
-   background: #18e695;
+   background: #e5e4f3;
+   border-radius: 10px;
 }
 
 .header {
@@ -22,5 +23,15 @@ body {
 
 .header__title {
     font-size: 64px;
+}
+
+.message_info {
+    background: #a2f4b2;
+    border: 5px solid #51ee6f;
+}
+
+.message_error {
+    background: #ff9494;
+    border: 5px solid #ec4545;
 }
 

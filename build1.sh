@@ -10,6 +10,6 @@ zip -r ../../build/phase1/phase1.zip * .flag
 cd ../..
 
 echo "Hiding Phase 2 .zip inside image file..."
-cat phase1/us.jpeg build/phase1/phase1.zip >> build/phase1/puzzle.jpeg
+cat phase1/ciphertext.jpg build/phase1/phase1.zip >> build/phase1/puzzle.jpg
 rm build/phase1/phase1.zip
 

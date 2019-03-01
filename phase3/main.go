@@ -47,8 +47,20 @@ func render(w http.ResponseWriter, r *http.Request, tpl *template.Template, data
     w.Write(buf.Bytes())
 }
 
-func renderAppPage(w http.ResponseWriter, r *http.Request, page string, message string) {
-    username := GetUsernameFromCookie(r)
+func renderLoginPage(w http.ResponseWriter, r *http.Request, message string) {
+    fullData := map[string]interface{}{
+        "Message": message,
+        "IsError": true,
+    }
+    render(w, r, loginTpl, fullData)
+}
+
+func renderAppPage(w http.ResponseWriter, r *http.Request, page string, message string, isError bool) {
+    cookie, err := r.Cookie("auth")
+    if err != nil {
+        http.Redirect(w, r, "/login", 302)
+    }
+    username,_,_ := ParseToken(cookie.Value)
     admin := UserIsAdmin(username)
     progress := ProgressForUser(username)
     usernames := ListUsers()
@@ -65,12 +77,13 @@ func renderAppPage(w http.ResponseWriter, r *http.Request, page string, message 
         leaderboard[username] = fmt.Sprintf("%.1f%%", percent)
     }
     fullData := map[string]interface{}{
-        "Username":    GetUsernameFromCookie(r),
+        "Username":    username,
         "Admin":       admin,
         "Page":        page,
         "Progress":    progress,
         "Leaderboard": leaderboard,
         "Message":     message,
+        "IsError":     isError,
     }
     render(w, r, appTpl, fullData)
 }
@@ -79,80 +92,145 @@ func renderAppPage(w http.ResponseWriter, r *http.Request, page string, message 
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
     w.Header().Set("Content-Type", "text/html; charset=utf-8")
 
-    if HasBeenAuthorized(r) || Authenticate(w,r) {
-        http.Redirect(w, r, "/app", 302)
+    if cookie, err := r.Cookie("auth"); err == nil {
+        username, _, authorized := ParseToken(cookie.Value)
+        if authorized {
+            Info.Println("Username %v is already authorized!", username)
+            http.Redirect(w, r, "/app", 302)
+            return
+        }
+    }
+
+    username := r.FormValue("username")
+    password := r.FormValue("password")
+
+    Info.Printf("Attempting login for username %v password %v", username, password)
+
+    if username == "" && password == "" {
+        renderLoginPage(w, r, "")
+        return
+    }
+    if username == "" {
+        renderLoginPage(w, r, "Please specify a username")
+        return
+    }
+    if password == "" {
+        renderLoginPage(w, r, "Please specify a password")
+        return
+    }
+    if password == "CTF{d4mn_u_sm4rt_gurl}" {
+        renderLoginPage(w, r, "LOL my real password isn't actually a flag :/ I'm only using it for debugging")
         return
     }
 
-    render(w, r, loginTpl, nil)
+    authToken := GenerateToken(username, password)
+    username,password,authorized := ParseToken(authToken)
+    cookie := &http.Cookie{
+        Name: "auth",
+        Value: authToken,
+    }
+    http.SetCookie(w, cookie)
+
+    if authorized {
+        Info.Println("Login successful!")
+        http.Redirect(w, r, "/app", 302)
+        return
+    }
+    renderLoginPage(w, r, "Login Failed!")
 }
 
 // AppHandler renders the app.html template
 func AppHandler(w http.ResponseWriter, r *http.Request) {
     w.Header().Set("Content-Type", "text/html; charset=utf-8")
 
+    cookie, err := r.Cookie("auth")
+    if err != nil {
+        http.Redirect(w, r, "/login", 302)
+    }
+    _,_,authorized := ParseToken(cookie.Value)
+    if !authorized {
+        http.Redirect(w, r, "/login", 302)
+        return
+    }
+
     pageValues := r.URL.Query()["page"]
     page := "progress"
     if len(pageValues) > 0 {
         page = pageValues[0]
     }
-    if !HasBeenAuthorized(r) {
-        http.Redirect(w, r, "/login", 302)
-        return
-    }
-    renderAppPage(w, r, page, "")
+    renderAppPage(w, r, page, "", false)
 }
 
 func HintHandler(w http.ResponseWriter, r *http.Request) {
     w.Header().Set("Content-Type", "text/html; charset=utf-8")
 
-    indexValues := r.URL.Query()["index"]
-    if len(indexValues) == 0 {
+    cookie, err := r.Cookie("auth")
+    username, password, authorized := ParseToken(cookie.Value)
+    if !authorized {
+        http.Redirect(w, r, "/login", 302)
+        return
+    }
+
+    indexStr := r.FormValue("index")
+    if indexStr == "" {
         Info.Printf("No index specified\n")
-        renderAppPage(w, r, "progress", "No index specified!")
+        renderAppPage(w, r, "progress", "No index specified!", true)
         return
     }
-    index, err := strconv.Atoi(indexValues[0])
+    index, err := strconv.Atoi(indexStr)
     if err != nil {
-        Info.Printf("Incorrectly formatted index %v\n", indexValues[0])
-        renderAppPage(w, r, "progress", "Incorrectly formatted index!")
+        Info.Printf("Incorrectly formatted index %v\n", indexStr)
+        renderAppPage(w, r, "progress", "Incorrectly formatted index!", true)
         return
     }
-    err = RequestHint(GetUsernameFromCookie(r), GetPasswordFromCookie(r), index)
+    err = RequestHint(username, password, index)
     if err != nil {
-        renderAppPage(w, r, "progress", err.Error())
+        renderAppPage(w, r, "progress", err.Error(), true)
         return
     }
-    renderAppPage(w, r, "progress", "Fine. Here ya go")
+    renderAppPage(w, r, "progress", "Fine. Here ya go", false)
 }
 
 func SubmitHandler(w http.ResponseWriter, r *http.Request) {
     w.Header().Set("Content-Type", "text/html; charset=utf-8")
 
-    flagValues := r.URL.Query()["flag"]
-    if len(flagValues) == 0 {
+    cookie, err := r.Cookie("auth")
+    username, password, authorized := ParseToken(cookie.Value)
+    if !authorized {
+        http.Redirect(w, r, "/login", 302)
+        return
+    }
+
+    flag := r.FormValue("flag")
+    if flag == "" {
         Info.Printf("No flag specified\n")
-        renderAppPage(w, r, "progress", "No flag specified")
+        renderAppPage(w, r, "progress", "No flag specified", true)
         return
     }
-    flag := flagValues[0]
-    err := Submit(GetUsernameFromCookie(r), GetPasswordFromCookie(r), flag)
+    err = Submit(username, password, flag)
     if err != nil {
-        renderAppPage(w, r, "progress", err.Error())
+        renderAppPage(w, r, "progress", err.Error(), true)
         return
     }
-    renderAppPage(w, r, "progress", "You got it!")
+    renderAppPage(w, r, "progress", "You got it!", false)
 }
 
 func ResetHandler(w http.ResponseWriter, r *http.Request) {
     w.Header().Set("Content-Type", "text/html; charset=utf-8")
 
-    err := ResetUsers(GetUsernameFromCookie(r), GetPasswordFromCookie(r))
-    if err != nil {
-        renderAppPage(w, r, "admin", err.Error())
+    cookie, err := r.Cookie("auth")
+    username, password, authorized := ParseToken(cookie.Value)
+    if !authorized {
+        http.Redirect(w, r, "/login", 302)
         return
     }
-    renderAppPage(w, r, "admin", "All user progress reset")
+
+    err = ResetUsers(username, password)
+    if err != nil {
+        renderAppPage(w, r, "admin", err.Error(), true)
+        return
+    }
+    renderAppPage(w, r, "admin", "All user progress reset", false)
 }
 
 func RobotsHandler(w http.ResponseWriter, r *http.Request) {
@@ -161,10 +239,10 @@ func RobotsHandler(w http.ResponseWriter, r *http.Request) {
 
 func main() {
     router := mux.NewRouter()
-    router.HandleFunc("/login", LoginHandler).Methods("GET")
+    router.HandleFunc("/login", LoginHandler).Methods("GET", "POST")
     router.HandleFunc("/app", AppHandler).Methods("GET")
-    router.HandleFunc("/app/hint", HintHandler).Methods("GET")
-    router.HandleFunc("/app/submit", SubmitHandler).Methods("GET")
+    router.HandleFunc("/app/hint", HintHandler).Methods("GET", "POST")
+    router.HandleFunc("/app/submit", SubmitHandler).Methods("GET", "POST")
     router.HandleFunc("/app/reset", ResetHandler).Methods("GET")
     router.HandleFunc("/robots.txt", RobotsHandler).Methods("GET")
     router.PathPrefix("/static/").Handler(http.FileServer(&assetfs.AssetFS{Asset: assets.Asset, AssetDir: assets.AssetDir, AssetInfo: assets.AssetInfo, Prefix: ""}))

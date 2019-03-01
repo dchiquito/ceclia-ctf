@@ -16,22 +16,33 @@
         Perhaps you should log in so that Daniel knows you can be trusted
     </div>
 </div>
+
+[[if .Message]]
+<div class="section message [[if .IsError]]message_error[[else]]message_info[[end]]">
+    [[.Message]]
+</div>
+[[end]]
+
 <div class="section login">
-    <div class="login-field login__username">
-        <div class="login-field__prompt">Name:</div>
-        <input class="login-field__input" id="name" type="text" v-model="username"></input>
-    </div>
-    <div class="login-field login__password">
-        <div class="login-field__prompt">Password:</div>
-        <input class="login-field__input" id="password" type="password" v-model="password"></input>
-    </div>
-    <div class="login-button login__submit">
-        <input class="login-button__input" id="submit" type="button" v-on:click="submit" value="Log In"></input>
-    </div>
+    <form action="/login" method="post">
+        <div class="login-field login__username">
+            <div class="login-field__prompt">Username:</div>
+            <input class="login-field__input" name="username" type="text"></input>
+        </div>
+        <div class="login-field login__password">
+            <div class="login-field__prompt">Password:</div>
+            <input class="login-field__input" name="password" type="password"></input>
+        </div>
+        <div class="login-button login__submit">
+            <input class="login-button__input" name="submit" type="submit" value="Log In"></input>
+        </div>
+    </form>
 </div>
 </body>
-
+<!--
+I guess we don't need any JS on the login page ¯\_(ツ)_/¯
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script src="https://unpkg.com/vue-cookies@1.5.12/vue-cookies.js"></script>
 <script src="/static/js/login.js"></script>
+-->
 </html>

@@ -22,9 +22,9 @@
         "hintused": false
     },
     {
-        "name":     "Just Simple",
+        "name":     "Justly Simplified",
         "flag":     "CTF{R34d1ng_src_c0d3_1s_my_f4v0rit3_h0bby}",
-        "hint":     "I had to use my least favorite language :'(",
+        "hint":     "The login page might be a good place for some archaeology",
         "solved":   false,
         "hintused": false
     },
@@ -45,7 +45,7 @@
     {
         "name":     "P4ssword Cr4cker",
         "flag":     "CTF{d4mn_u_sm4rt_gurl}",
-        "hint":     "To beat the admin, you gotta become the admin",
+        "hint":     "To beat the admin, you gotta be the admin",
         "solved":   false,
         "hintused": false
     }
