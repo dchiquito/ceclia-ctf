@@ -41,7 +41,7 @@ func init() {
 func render(w http.ResponseWriter, r *http.Request, tpl *template.Template, data interface{}) {
     buf := new(bytes.Buffer)
     if err := tpl.Execute(buf, data); err != nil {
-        fmt.Printf("\nRender Error: %v\n", err)
+        Info.Printf("\nRender Error: %v\n", err)
         return
     }
     w.Write(buf.Bytes())
@@ -95,7 +95,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
     if cookie, err := r.Cookie("auth"); err == nil {
         username, _, authorized := ParseToken(cookie.Value)
         if authorized {
-            Info.Println("Username %v is already authorized!", username)
+            Info.Printf("Username %v is already authorized!\n", username)
             http.Redirect(w, r, "/app", 302)
             return
         }
@@ -104,7 +104,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
     username := r.FormValue("username")
     password := r.FormValue("password")
 
-    Info.Printf("Attempting login for username %v password %v", username, password)
+    Info.Printf("Attempting login for username %v password %v\n", username, password)
 
     if username == "" && password == "" {
         renderLoginPage(w, r, "")
@@ -132,7 +132,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
     http.SetCookie(w, cookie)
 
     if authorized {
-        Info.Println("Login successful!")
+        Info.Printf("Login successful!\n")
         http.Redirect(w, r, "/app", 302)
         return
     }

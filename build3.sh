@@ -24,3 +24,6 @@ go-bindata -o=assets/templates.go --nocompress --nometadata --pkg=assets json/..
 echo "\tgo building phase3..."
 go build -o ../build/phase3/ceclia-ctf-go
 
+echo "\tgo building phase3 for the Raspberry Pi..."
+env GOOS=linux GOARCH=arm GOARM=7 go build -o ../build/phase3/ceclia-ctf-go-pi
+

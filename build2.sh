@@ -13,7 +13,7 @@ cp phase2/more-homework.pdf build/phase2/more-homework.pdf
 cd build/phase2
 
 echo "Generating encrypted files..."
-python broadcast.py broadcast '<a href="http://127.0.0.1:9596/login"></a>'
+python broadcast.py broadcast '<a href="http://98.26.35.179:9596/login"></a>'
 
 echo "Zipping hint..."
 zip are-you-sure.zip more-homework.pdf
