@@ -8,8 +8,6 @@ app = new Vue({
         signout: function(e) {
             console.log('Signing out');
             $cookies.remove('auth');
-            $cookies.remove('username');
-            $cookies.remove('password');
         },
         reset: function() {
             console.log('Reseting all progress');

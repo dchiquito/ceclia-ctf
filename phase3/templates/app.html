@@ -64,9 +64,9 @@
             <div class="challenge-body">
                 [[if $challenge.Solved]]
                     <div>Flag: <span class="challenge-body__flag">[[$challenge.Flag]]</span></div>
-                    <div>Hint: [[$challenge.Hint]]</div>
+                    <div>Hint: <span class="challenge-body__hint[[if $challenge.HintUsed]] challenge-body__hint_used[[end]]">[[$challenge.Hint]]</span></div>
                 [[else if $challenge.HintUsed]]
-                    <div>Hint: [[$challenge.Hint]]</div>
+                    <div>Hint: <span class="challenge-body__hint challenge-body__hint_used">[[$challenge.Hint]]</span></div>
                 [[else]]
                     <form action="/app/hint" method="post">
                         <input type="submit" value="Get Hint"></input>
