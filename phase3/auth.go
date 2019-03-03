@@ -40,10 +40,11 @@ func ParseToken(tokenString string) (string, string, bool) {
 	token, err := jwt.Parse(tokenString, keyFunction)
 	if err != nil {
 		Error.Printf("Error parsing JWT token: %v\n", err)
-		return "", "", false
+		// return "", "", false
+		// TODO hehe oops
 	}
 	claims, ok := token.Claims.(jwt.MapClaims)
-	if !ok || !token.Valid {
+	if !ok && !token.Valid { // TODO maybe this should be || ????
 		Error.Printf("Error mapping claims from the JWT token\n")
 		return "", "", false
 	}

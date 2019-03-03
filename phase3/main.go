@@ -176,6 +176,7 @@ func AppHandler(w http.ResponseWriter, r *http.Request) {
 	cookie, err := r.Cookie("auth")
 	if err != nil {
 		http.Redirect(w, r, "/login", 302)
+		return
 	}
 	username, _, authorized := ParseToken(cookie.Value)
 	if !authorized {
@@ -203,6 +204,7 @@ func HintHandler(w http.ResponseWriter, r *http.Request) {
 	cookie, err := r.Cookie("auth")
 	if err != nil {
 		http.Redirect(w, r, "/login", 302)
+		return
 	}
 	username, password, authorized := ParseToken(cookie.Value)
 	if !authorized {
@@ -241,6 +243,7 @@ func SubmitHandler(w http.ResponseWriter, r *http.Request) {
 	cookie, err := r.Cookie("auth")
 	if err != nil {
 		http.Redirect(w, r, "/login", 302)
+		return
 	}
 	username, password, authorized := ParseToken(cookie.Value)
 	if !authorized {
@@ -273,6 +276,7 @@ func ResetHandler(w http.ResponseWriter, r *http.Request) {
 	cookie, err := r.Cookie("auth")
 	if err != nil {
 		http.Redirect(w, r, "/login", 302)
+		return
 	}
 	username, password, authorized := ParseToken(cookie.Value)
 	if !authorized {
@@ -301,8 +305,8 @@ func main() {
 	router := mux.NewRouter()
 	router.HandleFunc("/login", LoginHandler).Methods("GET", "POST")
 	router.HandleFunc("/app", AppHandler).Methods("GET")
-	router.HandleFunc("/app/hint", HintHandler).Methods("POST")
-	router.HandleFunc("/app/submit", SubmitHandler).Methods("POST")
+	router.HandleFunc("/app/hint", HintHandler).Methods("GET", "POST")
+	router.HandleFunc("/app/submit", SubmitHandler).Methods("GET", "POST")
 	router.HandleFunc("/app/reset", ResetHandler).Methods("GET")
 	router.HandleFunc("/robots.txt", RobotsHandler).Methods("GET")
 	router.PathPrefix("/static/").Handler(http.FileServer(&assetfs.AssetFS{Asset: assets.Asset, AssetDir: assets.AssetDir, AssetInfo: assets.AssetInfo, Prefix: ""}))

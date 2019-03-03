@@ -10,7 +10,7 @@
     {
         "name":     "Hidden Secrets",
         "flag":     "CTF{3v3n_m0r3_st3gan0gr4fy_:3}",
-        "hint":     "don't even bother, this fLag iS invisible - unLess you know where to look",
+        "hint":     "don't even bother, this fLag iS invisible - impossibly hArd to find",
         "solved":   false,
         "hintused": false
     },
@@ -31,14 +31,14 @@
     {
         "name":     "The Navigator",
         "flag":     "CTF{b0ldly_g0_wh3r3_n0_h4cker_h4s_g0n3_b4}",
-        "hint":     "Going out of bounds is not allowed >:(",
+        "hint":     "Sorry there are so few pages to look at :(",
         "solved":   false,
         "hintused": false
     },
     {
         "name":     "Strings",
         "flag":     "CTF{str1ngs_w0nt_s4v3_u}",
-        "hint":     "strings are things",
+        "hint":     "strings are things. Sometimes strings are even in things.",
         "solved":   false,
         "hintused": false
     },
