@@ -5,6 +5,4 @@
 ./build2.sh
 ./build1.sh
 
-echo "Archiving build directory..."
-cd build
-
+echo "Done!"
