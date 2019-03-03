@@ -33,9 +33,9 @@ func init() {
 }
 
 func initLoggers(r *http.Request) {
-	remote := r.RemoteAddr;
-	Info = log.New(os.Stdout, "[INFO][" + remote + "] ", log.Ldate|log.Ltime)
-	Error = log.New(os.Stderr, "[ERROR][" + remote + "] ", log.Ldate|log.Ltime)
+	remote := r.RemoteAddr
+	Info = log.New(os.Stdout, "[INFO]["+remote+"] ", log.Ldate|log.Ltime)
+	Error = log.New(os.Stderr, "[ERROR]["+remote+"] ", log.Ldate|log.Ltime)
 }
 
 // Loads an HTML template.
@@ -49,7 +49,7 @@ func loadHtmlTemplate(fileName string) *template.Template {
 func render(w http.ResponseWriter, r *http.Request, tpl *template.Template, data interface{}) {
 	buf := new(bytes.Buffer)
 	if err := tpl.Execute(buf, data); err != nil {
-		Info.Printf("\nRender Error: %v\n", err)
+		Error.Printf("\nRender Error: %v\n", err)
 		return
 	}
 	w.Write(buf.Bytes())
@@ -109,7 +109,7 @@ func renderAppPage(w http.ResponseWriter, r *http.Request, page string, username
 }
 
 // GET,POST /login
-// If the auth token is valid and specifies authorized==true, no further validation is done. 
+// If the auth token is valid and specifies authorized==true, no further validation is done.
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	initLoggers(r)
 	Info.Printf("/login\n")
@@ -211,7 +211,7 @@ func HintHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	index, err := strconv.Atoi(indexStr)
 	if err != nil {
-		Info.Printf("Incorrectly formatted index %v\n", indexStr)
+		Error.Printf("Incorrectly formatted index %v\n", indexStr)
 		renderAppPage(w, r, "progress", username, "Incorrectly formatted index!", true)
 		return
 	}

@@ -28,6 +28,7 @@ func GenerateToken(username string, password string) string {
 	Info.Println(tokenString)
 
 	if err != nil {
+		Error.Printf("Error generating token: %v\n", err.Error())
 		return ""
 	}
 	return tokenString
@@ -35,15 +36,15 @@ func GenerateToken(username string, password string) string {
 
 // Parses a token into the username, password, and authorized value
 func ParseToken(tokenString string) (string, string, bool) {
-	Info.Printf("Parsing JWT token %v", tokenString)
+	Info.Printf("Parsing JWT token %v\n", tokenString)
 	token, err := jwt.Parse(tokenString, keyFunction)
 	if err != nil {
-		Info.Printf("Error parsing JWT token: %v\n", err)
+		Error.Printf("Error parsing JWT token: %v\n", err)
 		return "", "", false
 	}
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if !ok || !token.Valid {
-		Info.Printf("Error mapping claims from the JWT token\n")
+		Error.Printf("Error mapping claims from the JWT token\n")
 		return "", "", false
 	}
 	username := claims["username"].(string)

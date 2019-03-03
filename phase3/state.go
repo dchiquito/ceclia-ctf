@@ -89,7 +89,7 @@ func LoadUsers() {
 
 // Saves the current state of users to the users.json file
 func SaveUsers() {
-	Info.Printf("Saving users.json")
+	Info.Printf("Saving users.json\n")
 	rawUsers, err := json.MarshalIndent(users, "", "    ")
 	if err != nil {
 		panic(err)
