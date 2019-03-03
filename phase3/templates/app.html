@@ -49,32 +49,38 @@
             <input type="submit" value="Submit Flag"></input>
         </form>
     </div>
-    [[range $index, $challenge := .Progress]]
-        <div class="challenge-section[[if $challenge.Solved]] challenge-section_solved[[end]]">
-            <div class="challenge-header">
-                <div class="challenge-header__index">[[$index]])</div>
-                <div class="challenge-header__name">
-                    [[if or $challenge.HintUsed $challenge.Solved]]
-                        [[$challenge.Name]]
+    [[if .Admin]]
+        <div class="challenge-section challenge-section_solved">
+            Admins already know everything ;)
+        </div>
+    [[else]]
+        [[range $index, $challenge := .Progress]]
+            <div class="challenge-section[[if $challenge.Solved]] challenge-section_solved[[end]]">
+                <div class="challenge-header">
+                    <div class="challenge-header__index">[[$index]])</div>
+                    <div class="challenge-header__name">
+                        [[if or $challenge.HintUsed $challenge.Solved]]
+                            [[$challenge.Name]]
+                        [[else]]
+                            ???
+                        [[end]]
+                    </div>
+                </div>
+                <div class="challenge-body">
+                    [[if $challenge.Solved]]
+                        <div>Flag: <span class="challenge-body__flag">[[$challenge.Flag]]</span></div>
+                        <div>Hint: <span class="challenge-body__hint[[if $challenge.HintUsed]] challenge-body__hint_used[[end]]">[[$challenge.Hint]]</span></div>
+                    [[else if $challenge.HintUsed]]
+                        <div>Hint: <span class="challenge-body__hint challenge-body__hint_used">[[$challenge.Hint]]</span></div>
                     [[else]]
-                        ???
+                        <form action="/app/hint" method="post">
+                            <input type="submit" value="Get Hint"></input>
+                            <input type="hidden" name="index" value="[[$index]]"></input>
+                        </form>
                     [[end]]
                 </div>
             </div>
-            <div class="challenge-body">
-                [[if $challenge.Solved]]
-                    <div>Flag: <span class="challenge-body__flag">[[$challenge.Flag]]</span></div>
-                    <div>Hint: <span class="challenge-body__hint[[if $challenge.HintUsed]] challenge-body__hint_used[[end]]">[[$challenge.Hint]]</span></div>
-                [[else if $challenge.HintUsed]]
-                    <div>Hint: <span class="challenge-body__hint challenge-body__hint_used">[[$challenge.Hint]]</span></div>
-                [[else]]
-                    <form action="/app/hint" method="post">
-                        <input type="submit" value="Get Hint"></input>
-                        <input type="hidden" name="index" value="[[$index]]"></input>
-                    </form>
-                [[end]]
-            </div>
-        </div>
+        [[end]]
     [[end]]
     [[if not .Progress]]
         No challenges found for you, [[.Username]]!<br>

@@ -144,9 +144,9 @@ func ProgressForUser(username string) []Challenge {
 // Sets HintUsed to true for the given user and challenge and updates users.json.
 // The user needs to be authorized and HintUsed must currently be false.
 func RequestHint(username string, password string, index int) error {
-	Info.Printf("Requesting hint for %v %v %v\n", username, password, index)
+	Info.Printf("Requesting hint for challenge #%v for (%v,%v)\n", index, username, password)
 	if !UserIsAuthorized(username, password) {
-		return errors.New(fmt.Sprintf("%v is not authorized to request hints", username))
+		return errors.New(fmt.Sprintf("%v has the wrong password! Write access is not permitted", username))
 	}
 	user := findUser(username)
 	if user.Progress[index].HintUsed {
@@ -164,7 +164,7 @@ func RequestHint(username string, password string, index int) error {
 func Submit(username string, password string, flag string) error {
 	Info.Printf("Attempting submission of %v for %v %v\n", flag, username, password)
 	if !UserIsAuthorized(username, password) {
-		return errors.New(fmt.Sprintf("%v is not authorized to submit flags without a valid password", username))
+		return errors.New(fmt.Sprintf("%v has the wrong password! Write access is not permitted", username))
 	}
 	user := findUser(username)
 	for index, challenge := range user.Progress {
@@ -186,7 +186,7 @@ func Submit(username string, password string, flag string) error {
 // The given credentials must be to an authorized admin user.
 func ResetUsers(username string, password string) error {
 	if !UserIsAdmin(username) {
-		return errors.New(fmt.Sprintf("%v is not an admin, not permitted to reset users", username))
+		return errors.New(fmt.Sprintf("%v is not an admin! How rude!", username))
 	}
 	if !UserIsAuthorized(username, password) {
 		return errors.New(fmt.Sprintf("Wrong password for %v! How dare you hack my site!", username))

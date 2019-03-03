@@ -112,6 +112,7 @@ func renderAppPage(w http.ResponseWriter, r *http.Request, page string, username
 // If the auth token is valid and specifies authorized==true, no further validation is done.
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	initLoggers(r)
+	Info.Printf("\n")
 	Info.Printf("/login\n")
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 
@@ -168,6 +169,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 // There is a flag hidden when page is undefined.
 func AppHandler(w http.ResponseWriter, r *http.Request) {
 	initLoggers(r)
+	Info.Printf("\n")
 	Info.Printf("/app\n")
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 
@@ -194,10 +196,14 @@ func AppHandler(w http.ResponseWriter, r *http.Request) {
 // This is a write operation, so an authorization check is performed.
 func HintHandler(w http.ResponseWriter, r *http.Request) {
 	initLoggers(r)
+	Info.Printf("\n")
 	Info.Printf("/app/hint\n")
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 
 	cookie, err := r.Cookie("auth")
+	if err != nil {
+		http.Redirect(w, r, "/login", 302)
+	}
 	username, password, authorized := ParseToken(cookie.Value)
 	if !authorized {
 		http.Redirect(w, r, "/login", 302)
@@ -228,10 +234,14 @@ func HintHandler(w http.ResponseWriter, r *http.Request) {
 // This is a write operation, so an authorization check is performed.
 func SubmitHandler(w http.ResponseWriter, r *http.Request) {
 	initLoggers(r)
+	Info.Printf("\n")
 	Info.Printf("/app/submit\n")
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 
 	cookie, err := r.Cookie("auth")
+	if err != nil {
+		http.Redirect(w, r, "/login", 302)
+	}
 	username, password, authorized := ParseToken(cookie.Value)
 	if !authorized {
 		http.Redirect(w, r, "/login", 302)
@@ -256,10 +266,14 @@ func SubmitHandler(w http.ResponseWriter, r *http.Request) {
 // This is an admin only write operation, so an authorization check is performed.
 func ResetHandler(w http.ResponseWriter, r *http.Request) {
 	initLoggers(r)
+	Info.Printf("\n")
 	Info.Printf("/app/reset\n")
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 
 	cookie, err := r.Cookie("auth")
+	if err != nil {
+		http.Redirect(w, r, "/login", 302)
+	}
 	username, password, authorized := ParseToken(cookie.Value)
 	if !authorized {
 		http.Redirect(w, r, "/login", 302)
@@ -278,6 +292,7 @@ func ResetHandler(w http.ResponseWriter, r *http.Request) {
 // a flag is concealed in robots.txt
 func RobotsHandler(w http.ResponseWriter, r *http.Request) {
 	initLoggers(r)
+	Info.Printf("\n")
 	Info.Printf("/robots.txt\n")
 	render(w, r, robotsTpl, nil)
 }

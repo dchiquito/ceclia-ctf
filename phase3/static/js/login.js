@@ -15,6 +15,9 @@ login = new Vue({
             $cookies.set('username', this.username);
             $cookies.set('password', this.password);
             location.reload();
+        },
+        validateJWT: function() {
+            // TODO find a way to validate the JWT token
         }
     }
 });

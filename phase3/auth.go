@@ -47,9 +47,19 @@ func ParseToken(tokenString string) (string, string, bool) {
 		Error.Printf("Error mapping claims from the JWT token\n")
 		return "", "", false
 	}
-	username := claims["username"].(string)
-	password := claims["password"].(string)
-	authorized := claims["authorized"].(bool)
+	Info.Printf("Token claims: %v\n", claims)
+	username := ""
+	if claim, ok := claims["username"].(string); ok {
+		username = claim
+	}
+	password := ""
+	if claim, ok := claims["password"].(string); ok {
+		password = claim
+	}
+	authorized := false
+	if claim, ok := claims["authorized"].(bool); ok {
+		authorized = claim
+	}
 	Info.Printf("username=%v password=%v authorized=%v\n", username, password, authorized)
 	return username, password, authorized
 }
