@@ -2,7 +2,7 @@
 [
     {
         "name":     "thefirst",
-        "flag":     "CTF{1_l0v3_u_<3}",
+        "flag":     "CTF{g1t_gud}",
         "hint":     "Really? It was the first flag, not sure how you'd miss it :/",
         "solved":   false,
         "hintused": false

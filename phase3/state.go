@@ -19,7 +19,7 @@ type Challenge struct {
 	HintUsed bool
 }
 
-// A user in the app. Only ceclia and d4ni3l are planned for.
+// A user in the app. Only OldGr3g and d4ni3l are planned for.
 type User struct {
 	Username string
 	Password string
@@ -101,7 +101,7 @@ func SaveUsers() {
 	Info.Printf("users.json saved\n")
 }
 
-// Lists all users in the users object. Should only return [ceclia, d4ni3l]
+// Lists all users in the users object. Should only return [OldGr3g, d4ni3l]
 func ListUsers() []string {
 	userlist := make([]string, len(users))
 	for i, user := range users {
